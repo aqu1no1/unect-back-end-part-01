@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import logger from "./utils/logger";
+import connect from "./utils/connect";
 
 dotenv.config();
 
@@ -13,12 +15,8 @@ app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Hello World!" });
 });
 
-mongoose
-  .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.gy7gp98.mongodb.net/`
-  )
-  .then(() => {
-    console.log("Server is running!!");
-    app.listen(process.env.PORT);
-  })
-  .catch((err) => console.log(err));
+app.listen(process.env.PORT, async () => {
+  logger.info("Server is running");
+
+  await connect();
+});
